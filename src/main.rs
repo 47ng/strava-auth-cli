@@ -1,5 +1,13 @@
+// Required for Rocket code generation to work
+#![feature(proc_macro_hygiene, decl_macro)]
+
+#[macro_use]
+extern crate rocket;
+
 use structopt::StructOpt;
 use webbrowser;
+
+mod server;
 
 fn make_strava_auth_url(client_id: u32) -> String {
   let scopes = [
@@ -46,4 +54,6 @@ fn main() {
     println!("Visit the following URL to authorize your app with Strava:");
     println!("{}\n", auth_url);
   }
+
+  server::start();
 }
