@@ -1,6 +1,25 @@
 use rocket::config::{Config, Environment, LoggingLevel};
 use rocket::http::RawStr;
 
+#[derive(Debug)]
+pub struct AuthInfo {
+  pub code: String,
+  pub scopes: Vec<String>,
+}
+
+impl AuthInfo {
+  pub fn new(code: &RawStr, scopes: &RawStr) -> Self {
+    Self {
+      code: String::from(code.as_str()),
+      scopes: scopes.as_str().split(",").map(String::from).collect(),
+    }
+  }
+}
+
+pub type AuthResult = Result<AuthInfo, String>;
+
+// --
+
 #[get("/?<code>&<scope>")]
 fn success(code: &RawStr, scope: &RawStr) -> &'static str {
   println!("Code: {}", code);
