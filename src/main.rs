@@ -4,11 +4,15 @@
 #[macro_use]
 extern crate rocket;
 
+#[macro_use]
+extern crate serde_derive;
+
 use std::sync::mpsc;
 use structopt::StructOpt;
 use webbrowser;
 
 mod server;
+mod strava;
 
 fn make_strava_auth_url(client_id: u32) -> String {
   let scopes = [
@@ -67,9 +71,14 @@ fn main() {
   // it's needed.
   match rx.recv().unwrap() {
     Ok(auth_info) => {
-      println!("{:#?}", auth_info);
-      // Do something with the result
+      match strava::exchange_token(&auth_info.code, cli_args.client_id, &cli_args.client_secret) {
+        Ok(login) => {
+          println!("{:#?}", login);
+          println!("Scopes {:#?}", auth_info.scopes);
+        }
+        Err(error) => eprintln!("Error: {:#?}", error),
+      }
     }
-    Err(error) => eprintln!("{}", error),
+    Err(error) => eprintln!("Error: {:#?}", error),
   }
 }
