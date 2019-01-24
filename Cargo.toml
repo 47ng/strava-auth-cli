@@ -1,5 +1,5 @@
 [package]
-name = "strava-auth"
+name = "strava-auth-cli"
 version = "0.1.0"
 authors = ["Francois Best <francois@francoisbest.com>"]
 edition = "2018"

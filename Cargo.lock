@@ -1075,7 +1075,7 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "strava-auth"
+name = "strava-auth-cli"
 version = "0.1.0"
 dependencies = [
  "reqwest 0.9.9 (registry+https://github.com/rust-lang/crates.io-index)",
