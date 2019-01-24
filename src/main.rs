@@ -4,6 +4,7 @@
 #[macro_use]
 extern crate rocket;
 
+use std::sync::mpsc;
 use structopt::StructOpt;
 use webbrowser;
 
@@ -55,5 +56,20 @@ fn main() {
     println!("{}\n", auth_url);
   }
 
-  server::start();
+  let (tx, rx) = mpsc::channel();
+  std::thread::spawn(move || {
+    server::start(tx);
+  });
+
+  // recv() is blocking, so the main thread will patiently
+  // wait for data to be sent through the channel.
+  // This way the server thread stays alive for as long as
+  // it's needed.
+  match rx.recv().unwrap() {
+    Ok(auth_info) => {
+      println!("{:#?}", auth_info);
+      // Do something with the result
+    }
+    Err(error) => eprintln!("{}", error),
+  }
 }
