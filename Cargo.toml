@@ -3,6 +3,7 @@ name = "strava-auth-cli"
 version = "0.1.0"
 authors = ["Francois Best <francois@francoisbest.com>"]
 edition = "2018"
+license = "MIT"
 
 [dependencies]
 structopt = "0.2.14"
