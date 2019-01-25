@@ -19,18 +19,18 @@ mod strava;
 /// Authorize and authenticate a Strava API app.
 ///
 /// Requires a GUI web browser to be available.
-struct CliArgs {
-  #[structopt(short = "i", long = "id")]
-  client_id: u32,
+struct Arguments {
+  #[structopt(short = "i")]
+  id: u32,
 
-  #[structopt(short = "s", long = "secret")]
-  client_secret: String,
+  #[structopt(short = "s")]
+  secret: String,
 }
 
 fn main() {
-  let cli_args = CliArgs::from_args();
+  let args = Arguments::from_args();
 
-  let auth_url = strava::auth_url(cli_args.client_id);
+  let auth_url = strava::auth_url(args.id);
   if webbrowser::open(&auth_url).is_err() {
     // Try manually
     println!("Visit the following URL to authorize your app with Strava:");
@@ -47,15 +47,13 @@ fn main() {
   // This way the server thread stays alive for as long as
   // it's needed.
   match rx.recv().unwrap() {
-    Ok(auth_info) => {
-      match strava::exchange_token(&auth_info.code, cli_args.client_id, &cli_args.client_secret) {
-        Ok(login) => {
-          println!("{:#?}", login);
-          println!("Scopes {:#?}", auth_info.scopes);
-        }
-        Err(error) => eprintln!("Error: {:#?}", error),
+    Ok(auth_info) => match strava::exchange_token(&auth_info.code, args.id, &args.secret) {
+      Ok(login) => {
+        println!("{:#?}", login);
+        println!("Scopes {:#?}", auth_info.scopes);
       }
-    }
+      Err(error) => eprintln!("Error: {:#?}", error),
+    },
     Err(error) => {
       eprintln!("Error: {:#?}", error);
       // Let the async server send its response
