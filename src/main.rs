@@ -56,6 +56,11 @@ fn main() {
         Err(error) => eprintln!("Error: {:#?}", error),
       }
     }
-    Err(error) => eprintln!("Error: {:#?}", error),
+    Err(error) => {
+      eprintln!("Error: {:#?}", error);
+      // Let the async server send its response
+      // before the main thread exits.
+      std::thread::sleep(std::time::Duration::from_secs(1));
+    }
   }
 }
