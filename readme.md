@@ -35,5 +35,5 @@ It's very useful when you're at the prototyping phase of an API client.
 ---
 
 The building of this project has been the subject of a
-[blog article](https://francoisbest.com/posts/2019/strava-auth-cli)
+[blog article](https://francoisbest.com/posts/2019/strava-auth-cli-in-rust)
 on my website.
